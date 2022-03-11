@@ -8,5 +8,5 @@ export default mysql.createConnection({
     port : 3306,
     user: 'smartleadmin',
     password : 'smartleroot',
-    database : 'smartle_db'
+    database : 'smartle'
 })

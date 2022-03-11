@@ -24,7 +24,7 @@ export const getAllCourses =  ((req: Request, res: Response) => {
         }
 
         const startingLimit = (page - 1) * resultsPerPage;
-        sql = `SELECT * from course LIMIT ${startingLimit},${resultsPerPage}`;
+        sql = `SELECT * from course`;
         
         db.query(sql, (err:any, result:any) =>{
             if(err){

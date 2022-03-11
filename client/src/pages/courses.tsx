@@ -5,6 +5,7 @@ import CoursesStack from '../components/dynamic/CoursesStack';
 import { getCourses } from '../util/api';
 import { isNull } from '../util/helpers';
 import { TopGrad } from '../util/resources/vector';
+import { Clock, Card } from '../util/resources';
 
 const Courses = () => {
   const [courses, setCourses] = useState<any>(undefined);
@@ -16,6 +17,7 @@ const Courses = () => {
   const [fail, setFail] = useState(undefined);
   const [filterValue, setFilterValue] = useState<string | undefined>(undefined);
   const [filterAge, setFilterAge] = useState<string | undefined>('All');
+  console.log()
 
   useEffect(() => {
     ( async () => {
@@ -24,65 +26,65 @@ const Courses = () => {
           `http://localhost:8000/course`
         );
         const json = await res.json();
-       //console.log(json.result);
-				setCourses(json.result);
-				setOgCourses(json.result);
-        setIterator(json.iterator);
-        setNumberOfPages(json.numberOfPages);
-        setPage(json.page);
+       if(filterValue !== undefined){
+        setCourses(json.result?.filter((dataItem: any, index: any) => dataItem.course_name?.toLowerCase().includes(filterValue?.toLowerCase())))
+      }else if (filterAge !== 'All'){
+        setCourses(json.result?.filter((dataItem: any, index: any) => dataItem.course_age === filterAge))
+      }else{
+         setCourses(json.result);
+       }
 			} catch (e: any) {
 				setFail(e.message);
 			}
 		})();
-  }, [])
+  }, [filterAge, filterValue])
 
-  useEffect(() => {
-    if (!isNull(courses) && !isNull(ogCourses)) {    
-      setFilterAge(undefined);
-      setCourses([]);
-      let lclCourses = [ ...ogCourses ];
-      if (isNull(filterValue)) setCourses(lclCourses);  
-      (async () => {
-        let newlist  = await lclCourses?.filter(
-          (course: any) => course.title?.toLowerCase().includes(filterValue?.toLowerCase())
-        )      
-        setCourses(newlist);
-        setUpdateCourses(updateCourses+1)
-      })();
-    }
-  }, [filterValue]);
+  // useEffect(() => {
+  //   if (!isNull(courses) && !isNull(ogCourses)) {    
+  //     setFilterAge(undefined);
+  //     setCourses([]);
+  //     let lclCourses = [ ...ogCourses ];
+  //     if (isNull(filterValue)) setCourses(lclCourses);  
+  //     (async () => {
+  //       let newlist  = await courses?.filter((dataItem: any, index: any) => dataItem?.course_age === filterAge)
+        
+  //       // lclCourses?.filter(
+  //       //   (course: any) => course.title?.toLowerCase().includes(filterValue?.toLowerCase())
+  //       // )      
+  //       setCourses(newlist);
+  //       setUpdateCourses(updateCourses+1)
+  //     })();
+  //   }
+  // }, [filterValue]);
   
 
-  useEffect(() => {
-    if (!isNull(filterAge) && !isNull(ogCourses)) {
-      setCourses([]);
-      let lclCourses = [...ogCourses];   
-      setCourses([]);
-      if (filterAge == 'All') {
-        setCourses(lclCourses);
-        setUpdateCourses(updateCourses + 1)
-        return;
-      } else {
-        (async () => {
-          let newlist = await lclCourses?.filter(
-            (course: any) => course.age?.toLowerCase().includes(filterAge?.toLowerCase())
-          )
-          lclCourses = newlist;
-          setCourses(lclCourses);
-          setUpdateCourses(updateCourses + 1)
-        })();
-      }
-    }
-  }, [filterAge]);
-
-  let components = [] 
-  for(let i = 0 ; i < iterator ; i++ ){
-    console.log(i);
-    if( i === page){
-      components.push(<Link to={`/?page=${i}`}>i</Link>)
-      continue;
-    }
-  }
+  // useEffect(() => {
+  //   if (!isNull(filterAge) && !isNull(ogCourses)) {
+  //     setCourses([]);
+  //     let lclCourses = [...ogCourses];   
+  //     setCourses([]);
+  //     if (filterAge == 'All') {
+  //       setCourses(lclCourses);
+  //       setUpdateCourses(updateCourses + 1)
+  //       return;
+  //     } else {
+  //       (async () => {
+  //         try {
+  //           const res = await fetch(
+  //             `http://localhost:8000/course`
+  //           );
+  //           const json = await res.json();
+  //          //console.log(json.result);
+  //          setCourses(json.result?.filter((dataItem: any, index: any) => dataItem.course_age === filterAge))
+  //         } catch (e: any) {
+  //           setFail(e.message);
+  //         }
+  //         setCourses(lclCourses);
+  //         setUpdateCourses(updateCourses + 1)
+  //       })();
+  //     }
+  //   }
+  // }, [filterAge]);
 
   return (<>
     <GradientBlobT />
@@ -145,10 +147,45 @@ const Courses = () => {
       </div>
       {
         (!isNull(courses) && courses && updateCourses) && (
-          <CoursesStack courses={courses} />
+          <>
+          {courses?.map((course:any, index: number) => 
+          <Link to={`/course/${course.course_id}`} className="mx-5 md:mx-0 my-10 relative text-slate-900 bg-accent-200 p-5 shadow-xl rounded-lg flex flex-wrap ">                
+          <div className="w-full md:w-1/3">
+          {
+              course.course_image ? (<>
+                  <img className="w-full rounded-lg" src={course.course_image} alt={course.course_name} />                            
+              </>) : (
+                  <div className='w-full h-40 rounded-lg bg-color-100'></div>
+              )
+          }
+          </div>
+          <div className="w-full md:w-2/3 md:pl-7 mt-5 md:mt-0">
+              <div className="font-semibold mb-1">Age: {course.course_age} Yrs</div>
+              <div className="font-bold text-3xl mb-2">{course.course_name}</div>
+              <div className="mb-2">{course.course_description}</div>
+              <div className="md:w-9/12 mb-6 flex items-center">
+                  <img className="w-10 h-10 mr-5" src={Clock.default} alt="" />
+                  <div className="">Duration: <span className=''>{course.course_duration}</span></div>
+              </div>
+              {/* <div className="mb-5 md:mb-10 flex items-center">
+                  <img className="w-10 h-10 mr-5" src={Card.default} alt="" />            
+                  <div className="">Instructor/Coach: <span>{course.instructor.name}</span></div>
+              </div> */}
+          </div>
+          <div className="cost md:absolute bottom-7 right-10  ">
+              <p className='text-sm'>Cost:</p>
+              <p className='text-3xl text-color-400 font-black'>
+                  <span className='text-4xl'>{course.course_cost}</span>
+                  <span className='text-2xl'>$</span>            
+              </p>
+          </div>                
+  </Link>       
+          )}
+          </>
+           
+          // <CoursesStack courses={courses} />
         )
       }
-      {components}
     </div>
   </>);
 }
