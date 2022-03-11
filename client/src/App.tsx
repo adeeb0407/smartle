@@ -5,6 +5,13 @@ import Header from './components/organisms/Header';
 import { ThemeProvider, createTheme } from '@mui/material';
 import Footer from './components/organisms/Footer';
 
+//redux
+import { actionCreators } from './redux';
+import { RootState } from './redux/reducers';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUsers} from './redux/action-creators/index'
+import { bindActionCreators } from 'redux';
+
 import { lazy } from 'react';
 import CompleteHome from './pages/Complete/CompleteHome';
 import CompleteCourses from './pages/Complete/CompleteCourses';
@@ -30,8 +37,11 @@ const theme = createTheme();
 function App() {
 
   const location = useLocation();
+  const dispatch = useDispatch();
+  const { fetchUsers} = bindActionCreators(actionCreators, dispatch)
   
   useEffect(() => {
+    fetchUsers()
     window.scrollTo(0, 0);
     if (
       location.pathname === "/enterprise" ||
@@ -44,6 +54,8 @@ function App() {
     else
       document.documentElement.style.setProperty('--scrollBarColor', '#917ebd');
   }, [location]);
+  const state = useSelector((state: RootState) => state.fetchUser)
+  console.log(state)
 
   return (
     <ThemeProvider theme={theme}>

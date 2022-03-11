@@ -5,12 +5,16 @@ import './styles/index.scss';
 import App from './App';
 import CssBaseline from '@mui/material/CssBaseline'
 import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import { store } from './redux';
 
 ReactDOM.render(
   <BrowserRouter>
     <React.StrictMode>
+    <Provider store={store}>
       <CssBaseline />
       <App />
+      </Provider>
     </React.StrictMode>
   </BrowserRouter>,
   document.getElementById('root')
