@@ -10,6 +10,11 @@ import CourseCTA from '../components/sections/course/CourseCTA';
 import Instructor from '../components/sections/course/Instructor';
 import { getCourse, getInstructor } from '../util/api';
 import { isNull } from '../util/helpers';
+import RegisterInterestModal from '../components/organisms/RegisterInterestModal';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+
+import Transition from '../components/atom/Transition';
 
 //reduc imports for globalstae of courseID
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,27 +23,34 @@ import axios from 'axios'
 
 const Course = () => {
   const { id } = useParams<{ id: string }>();
+
   const [course, setCourse] = useState<any>(undefined);
   const [fail, setFail] = useState<string | undefined>(undefined);
   const [instructor, setInstructor] = useState<any>(undefined);
   const [isEnterprise, setIsEnterprise] = useState<boolean>(false);
 
   const [courseView, setCourseView] = useState<courseViewer[]>([]);
-  console.log(courseView)
+   console.log(courseView)
   const [moduleView, setModuleView] = useState<moduleViewer[]>([]);
-  console.log(moduleView)
+  //console.log(moduleView)
 
   //redux course_id saved use this as state
   const course_id = useSelector((state: RootState) => state.courseIDFetch)
-  console.log(course_id)
+  // console.log(course_id)
 
   interface courseViewer {
     course_id: number;
     course_name: string;
-    course_duration: string;
+    course_age: string;
     course_type: string;
     course_cost:string;
+    course_description: string;
+    course_learningobjective: string;
+    course_image: string;
+    course_numberofclasses: number;
+    course_duration: number;
 }
+
   interface moduleViewer {
     module_id: number;
     module_name: string;
@@ -49,51 +61,33 @@ const Course = () => {
 
   useEffect(() => {
 
-    axios.get<courseViewer[]>('http://localhost:8000/getcourseview/'+course_id)
+    axios.get<courseViewer[]>('http://localhost:8000/getcourseview/'+id)
     .then((res)=>{
       setCourseView(res.data)
     }).catch((err) => {
       console.log(err)
     })
 
-    axios.get<moduleViewer[]>('http://localhost:8000/getmoduleforcourse/'+course_id)
+    axios.get<moduleViewer[]>('http://localhost:8000/getmoduleforcourse/'+id)
     .then((res)=>{
       setModuleView(res.data)
     }).catch((err) => {
       console.log(err)
     })
 
-    // (() => {
-    //   try {
-    //     var data: any = [];
-    //     if (id === 'chemistry' || id === 'mathematics' || id === 'physics' || id === 'biology') {
-    //       data = getCourse(id, "slug", true);
-    //       setIsEnterprise(true);
-    //       document.documentElement.style.setProperty('--scrollBarColor', '#5290F2');
-    //       let lclCourse = { ...data[0] };
-    //       delete lclCourse.grade;
-    //       delete lclCourse.timeline;
-    //       lclCourse['timeline'] = {};
-    //       data.forEach((d:any) => {
-    //         lclCourse['timeline'][d.grade] = d.timeline;
-    //       })
-    //       Object.fromEntries(Object.entries(lclCourse['timeline']).sort((a, b) => {
-    //         return parseInt(a[0].replace("Grade ", "")) - parseInt(b[0].replace("Grade ", ""))
-    //       }))
-    //       data = lclCourse;
-    //     } else {
-    //       data = getCourse(id);
-    //       setInstructor(data.instructor);
-    //     }
-    //     if (isNull(data)) return;
-    //     setCourse(data);
-    //   } catch (e: any) {
-    //     setFail(e.message);
-    //   }
-    // })();
   }, [id, course_id])
 
-  return (<>
+  const [activeDot, setActiveDot] = useState<number>(0);
+
+  const [openVideo, setOpenVideo] = React.useState(false);
+  const handleOpenVideo = () => setOpenVideo(true);
+  const handleCloseVideo = () => setOpenVideo(false);
+  const [openInterest, setOpenInterest] = React.useState(false);
+  const handleOpenInterest = () => setOpenInterest(true);
+  const handleCloseInterest = () => setOpenInterest(false);
+
+  return (
+    <>
     {
       !isEnterprise ? (<>
         <div className="hidden md:block overflow-y-hidden h-full">
@@ -105,37 +99,134 @@ const Course = () => {
           <div className="hidden md:block"><GradBlobBlueTR /></div>
       </>)
     }
-    {
-      !isNull(course) && (isEnterprise || !isNull(instructor)) && !fail ? (<>
         <div className="mx-auto w-10/12 mt-12 ">
-          <Banner course={course} isEnterprise={isEnterprise} />
+        <RegisterInterestModal isEnterprise={isEnterprise} courseId={courseView[0]?.course_id} openInterest={openInterest} handleCloseInterest={handleCloseInterest} />
+        <div className="z-20 relative flex flex-wrap flex-col-reverse md:flex-row">
+            <div className="md:w-1/2 mt-10 md:mt-0 md:pr-10">
+                <h1 className="font-black text-3xl text-center md:text-left">{courseView[0]?.course_name}</h1>
+                <p className="md:text-lg mt-4">{courseView[0]?.course_description}</p>
+                {
+                    !isEnterprise && (<>
+                        <h1 className="font-black md:text-xl mt-6">Learning Objectives</h1>
+                        <p className="md:text-lg mt-4">{courseView[0]?.course_learningobjective}</p>
+                    </>)
+                }
+                {/* <div className="flex gap-4">
+                    <Button
+                        onClick={handleOpenInterest}
+                        className={`mt-12 px-7 md:px-14 py-2 text-white ${isEnterprise ? 'bg-contrast-400' : 'bg-color-400'} font-bold rounded-md`}>Register Your Interest</Button>
+                </div> */}
+            </div>
+            <div className="md:w-1/2 flex items-center justify-center">
+                <div className={`${isEnterprise ? 'bg-contrastAccent-200' : 'bg-accent-200'} rounded-md shadow-xl p-3 w-10/12 relative`}>
+                    <img src={courseView[0]?.course_image} className="rounded-md w-full" alt="" />
+                </div>
+            </div>        
+        </div>     
+        <div>
+        <div className="relative z-30 mt-32 mb-20 py-16 md:py-5 bg-accent-200 w-full h-auto md:h-40 rounded-xl shadow-2xl flex flex-wrap md:flex-nowrap items-center justify-center gap-6">            
+            {
+              <React.Fragment>
+                  <div className="w-40 text-center mt-2">
+                    <p className="text-gray-700">Number of Classes</p>
+                      <div className={`font-black`}>
+                          <span className='text-color-400 text-3xl'></span>
+                          <span className='text-color-400 text-3xl'>{courseView[0]?.course_numberofclasses}</span></div>
+                      <p className="text-gray-700"></p>
+                  </div>
+                  <div style={{ height: '0.5px' }} className="w-2/3 bg-slate-300 sm:hidden block"></div>
+                  <div style={{ width: '0.5px' }} className="h-2/3 bg-slate-400 hidden md:block"></div>
+
+                  <div className="w-40 text-center mt-2">
+                    <p className="text-gray-700">Duration</p>
+                      <div className={`font-black`}>
+                          <span className='text-color-400 text-3xl'></span>
+          
+                          <span className='text-color-400 text-3xl'>{courseView[0]?.course_duration/60}</span></div>
+                      <p className="text-gray-700">Min Per Class</p>
+                  </div>
+                  <div style={{ height: '0.5px' }} className="w-2/3 bg-slate-300 sm:hidden block"></div>
+                  <div style={{ width: '0.5px' }} className="h-2/3 bg-slate-400 hidden md:block"></div>
+
+                  <div className="w-40 text-center mt-2">
+                    <p className="text-gray-700">Live-class ratio</p>
+                      <div className={`font-black`}>
+                          <span className='text-color-400 text-3xl'></span>
+          
+                          <span className='text-color-400 text-3xl'>1:6</span></div>
+                      <p className="text-gray-700"></p>
+                  </div>
+                  <div style={{ height: '0.5px' }} className="w-2/3 bg-slate-300 sm:hidden block"></div>
+                  <div style={{ width: '0.5px' }} className="h-2/3 bg-slate-400 hidden md:block"></div>
+
+                  <div className="w-40 text-center mt-2">
+                    <p className="text-gray-700">Age</p>
+                      <div className={`font-black`}>
+                          <span className='text-color-400 text-3xl'></span>
+                          <span className='text-color-400 text-3xl'>{courseView[0]?.course_age}</span></div>
+                      <p className="text-gray-700">Years</p>
+                  </div>
+                  <div style={{ height: '0.5px' }} className="w-2/3 bg-slate-300 sm:hidden block"></div>
+                  <div style={{ width: '0.5px' }} className="h-2/3 bg-slate-400 hidden md:block"></div>
+
+                  <div className="w-40 text-center mt-2">
+                    <p className="text-gray-700">Cost</p>
+                      <div className={`font-black`}>
+                          <span className='text-color-400 text-3xl'></span>
+                          <span className='text-color-400 text-3xl'>{courseView[0]?.course_cost}</span></div>
+                      <p className="text-gray-700">per Class</p>
+                  </div>
+              </React.Fragment>
+            }
+        </div>  
+        </div>
+
+        <div className='pb-1 relative mb-20 md:mb-40'>
+    <h1 className="text-4xl font-black text-center mt-32">Learning Journey</h1>
+    <div className="md:shadow-2xl overflow-x-scroll md:overflow-x-auto overflow-y-hidden  rounded-t-xl md:rounded-xl mt-16">
+      <div style={{minWidth:'750px'}} className="relative timeline py-5 bg-accent-200 w-full h-60 md:pb-16 rounded-t-xl md:rounded-3xl shadow-2xl flex justify-center items-center">         
+    <div className={`w-20 timeline-line line-up`}></div>
+      {
+        !isNull(moduleView) ? (<>
           {
-            !isEnterprise ? (<>
-              <StatsCard
-                stats={course.stats}
-                text={course.statsText}
-              />
-              {course.self_paced ? (<Curriculum curr={Object.values(course.timeline)} />) : (<CustTimeline list={course.timeline} />)}
-            </>) : (<div className="mt-32 z-20 relative">
-                <Curriculum enterprise={course.enterprise} curr={course.timeline} />
-            </div>)
-          }
+              moduleView.map((item: any, itemIdx: number) => {
+              let title = moduleView[itemIdx].module_name;
+              let desc = moduleView[itemIdx].module_description;
+              let myDir = ["up", "translate-y-10", "-top-28"];
+              if (itemIdx % 2 == 0) myDir = ["down", "-translate-y-10", "-top-8"];
+              let showLine = "transition-all hidden";
+              if (itemIdx === activeDot) showLine = "transition-all ";
+              return (<React.Fragment key={itemIdx}>
+                <div onClick={() => setActiveDot(itemIdx)}
+                  className={`timelinePoint h-5 w-5 bg-color-400 rounded-full ${myDir[1]} cursor-pointer relative`}
+                >
+                  <div className={`absolute ${showLine} truncate z-50 px-2 left-3 -translate-x-1/2 ${myDir[2]} font-semibold text-slate-700`}>
+                      {title}
+                  </div>
+                  <div style={{transform: 'translateX(-6px) rotate(90deg)'}} className={`w-32 ${showLine} timeline-line top-24 -left-12 absolute`}></div>
+                </div>
+                <div className={`w-20 timeline-line line-${myDir[0]}`}></div>
+              </React.Fragment>);              
+            })
+          }                                        
+        </>) : (<>
+          <div className="h-5 w-5 bg-color-400 rounded-full"></div>               
+        </>)
+      }     
+      </div>
+    </div>      
+    <div className="relative md:absolute top-full -translate-y-12 left-1/2 -translate-x-1/2 bg-color-200 rounded-b-xl md:rounded-3xl shadow-2xl md:w-10/12 py-5">
+        <Transition index={moduleView[activeDot]?.module_id}>
+            <div className="h1 text-center font-bold text-2xl text-slate-700">{moduleView[activeDot]?.module_name}</div>
+            <div className="text-center px-5 md:px-16 mt-3 pb-3 font-medium text-slate-700">{moduleView[activeDot]?.module_description}</div>
+        </Transition>
+      </div>
+      
+  </div>;
         </div>
-        {/* {
-          !course.self_paced && (<Instructor instructor={instructor} />)
-        } */}
-        <CourseCTA isEnterprise={isEnterprise} courseId={course.id} />
-      </>) : (
-        <div style={{ marginTop: '40vh', textAlign: 'center' }}>
-          <CircularProgress color="secondary" />
-          <div className="w-full">
-            <div className="my-10">Looks like there is some problem!</div>
-            <Link to={'/courses'} className='px-14 py-4 text-white bg-color-400 font-bold rounded-md'>Explore Other Courses</Link>
-          </div>
-        </div>
-      )
-    }
-  </>);
+       
+        </>
+      );
 }
 
 export default Course;

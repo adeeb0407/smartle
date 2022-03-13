@@ -8,10 +8,11 @@ interface Props{
 
 
 const CustTimeline = ({ list }: Props) => {
+  console.log(list);
   const [activeDot, setActiveDot] = useState<number>(0);
   return <div className='pb-1 relative mb-20 md:mb-40'>
     <h1 className="text-4xl font-black text-center mt-32">Learning Journey</h1>
-    <div className="md:shadow-2xl overflow-x-scroll md:overflow-x-auto overflow-y-hidden  rounded-t-xl md:rounded-xl mt-16">
+    {/* <div className="md:shadow-2xl overflow-x-scroll md:overflow-x-auto overflow-y-hidden  rounded-t-xl md:rounded-xl mt-16">
       <div style={{minWidth:'750px'}} className="relative timeline py-5 bg-accent-200 w-full h-60 md:pb-16 rounded-t-xl md:rounded-3xl shadow-2xl flex justify-center items-center">         
     <div className={`w-20 timeline-line line-up`}></div>
       {
@@ -48,8 +49,8 @@ const CustTimeline = ({ list }: Props) => {
             <div className="h1 text-center font-bold text-2xl text-slate-700">{list[activeDot].label}</div>
             <div className="text-center px-5 md:px-16 mt-3 pb-3 font-medium text-slate-700">{list[activeDot].value}</div>
         </Transition>
-      </div>
-  </div>;
+      </div>*/}
+  </div>; 
 }
 
 export default CustTimeline;

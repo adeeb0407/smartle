@@ -179,7 +179,7 @@ const Courses = () => {
               <div className="mb-2">{course.course_description}</div>
               <div className="md:w-9/12 mb-6 flex items-center">
                   <img className="w-10 h-10 mr-5" src={Clock.default} alt="" />
-                  <div className="">Duration: <span className=''>{course.course_duration}</span></div>
+                  <div className="">Duration: <span className=''>{`${course.course_numberofclasses} Classes, Once Per Week`}</span></div>
               </div>
               {/* <div className="mb-5 md:mb-10 flex items-center">
                   <img className="w-10 h-10 mr-5" src={Card.default} alt="" />            
@@ -189,8 +189,9 @@ const Courses = () => {
           <div className="cost md:absolute bottom-7 right-10  ">
               <p className='text-sm'>Cost:</p>
               <p className='text-3xl text-color-400 font-black'>
+              <span className='text-2xl'>$</span>  
                   <span className='text-4xl'>{course.course_cost}</span>
-                  <span className='text-2xl'>$</span>            
+                          
               </p>
           </div>                
   </Link>       
