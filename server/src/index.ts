@@ -6,6 +6,7 @@ import trialRouter from "./routes/routeTrial"
 import studentRouter from './routes/studentRoutes';
 import coursesRouter from './routes/coursesRoutes';
 import parentRouter from './routes/parentRoutes';
+import moduleRouter from './routes/moduleRoutes';
 
 const app = express()
 dotenv.config()

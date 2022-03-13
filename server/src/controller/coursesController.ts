@@ -46,11 +46,24 @@ export const getAllCourses =  ((req: Request, res: Response) => {
 });
 
 export const getAllCoursesOnHome =  ((req: Request, res: Response) => {
-    db.query('SELECT * from course', (err: any, rows: any) =>{
+
+    let sql = `SELECT * from course`;
+
+    db.query(sql, (err:any, result:any) =>{
         if(err){
             console.log(err);
         }
+        res.send(result);   
+    })
+});
 
+export const getCourseView =  ((req: Request, res: Response) => {
+    let course_id = req.params.id;
+    let sql = `SELECT * FROM course WHERE course_id = ${course_id}`;
+    db.query(sql, (err: any, rows: any) =>{
+        if(err){
+            console.log(err);
+        }
         res.send(rows);
     });
 });

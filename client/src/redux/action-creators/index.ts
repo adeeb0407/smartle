@@ -1,9 +1,10 @@
 import { Dispatch } from "redux"
-import { UserType } from "../action-types"
-import { UserAction } from "../actions/user"
+import { UserType, CourseType} from "../action-types"
+import { UserAction, CourseIDAction} from "../actions/user"
 import * as api from '../api'
 
 export const fetchUsers = () => async(dispatch: Dispatch<UserAction>) => {
+
     try {
         const {data} = await api.getUsers()
 
@@ -15,3 +16,12 @@ export const fetchUsers = () => async(dispatch: Dispatch<UserAction>) => {
         console.log(error)
     }
   }
+
+  export const fetchCourseID = (course_id: number) => {
+    return (dispatch: Dispatch<CourseIDAction>) => {
+        dispatch({
+            type: CourseType.COURSE_ID,
+            payload: course_id
+        })
+    }
+}

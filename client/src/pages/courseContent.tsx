@@ -8,6 +8,9 @@ import MobileFooter from '../components/organisms/MobileFooter';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import "../styles/coursecontent.scss";
 
+import { RootState } from '../redux/reducers';
+import { useDispatch, useSelector } from 'react-redux';
+
 interface Props {
   /**
    * Injected by the documentation to work in an iframe.
@@ -34,6 +37,8 @@ function HideOnScroll(props: Props) {
 }
 
 const CourseContent = () => {
+  const course_id = useSelector((state: RootState) => state.courseIDFetch)
+  console.log(course_id)
 
   return (
     <>

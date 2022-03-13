@@ -5,11 +5,10 @@ import Header from './components/organisms/Header';
 import { ThemeProvider, createTheme } from '@mui/material';
 import Footer from './components/organisms/Footer';
 
-//redux
+//redux copy
 import { actionCreators } from './redux';
 import { RootState } from './redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUsers} from './redux/action-creators/index'
 import { bindActionCreators } from 'redux';
 
 import { lazy } from 'react';
@@ -35,10 +34,10 @@ const CourseContent = lazy(() => import('./pages/courseContent'));
 const theme = createTheme();
 
 function App() {
-
+  //copy
   const location = useLocation();
   const dispatch = useDispatch();
-  const { fetchUsers} = bindActionCreators(actionCreators, dispatch)
+  const { fetchUsers, fetchCourseID} = bindActionCreators(actionCreators, dispatch)
   
   useEffect(() => {
     fetchUsers()
@@ -54,8 +53,7 @@ function App() {
     else
       document.documentElement.style.setProperty('--scrollBarColor', '#917ebd');
   }, [location]);
-  const state = useSelector((state: RootState) => state.fetchUser)
-  console.log(state)
+  const state = useSelector((state: RootState) => state.fetchUsers)
 
   return (
     <ThemeProvider theme={theme}>

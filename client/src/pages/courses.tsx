@@ -7,8 +7,15 @@ import { isNull } from '../util/helpers';
 import { TopGrad } from '../util/resources/vector';
 import { Clock, Card } from '../util/resources';
 
+import { actionCreators } from '../redux';
+import { RootState } from '../redux/reducers';
+import { useDispatch, useSelector } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+
 const Courses = () => {
   const [courses, setCourses] = useState<any>(undefined);
+  console.log(courses)
   const [page, setPage] = useState(10);
   const[iterator, setIterator] = useState(10);
   const[numberOfPages, setNumberOfPages] = useState(10);
@@ -17,7 +24,13 @@ const Courses = () => {
   const [fail, setFail] = useState(undefined);
   const [filterValue, setFilterValue] = useState<string | undefined>(undefined);
   const [filterAge, setFilterAge] = useState<string | undefined>('All');
-  console.log()
+  
+  
+  const dispatch = useDispatch();
+  const { fetchUsers, fetchCourseID} = bindActionCreators(actionCreators, dispatch)
+
+  const course_id = useSelector((state: RootState) => state.courseIDFetch)
+  console.log(course_id)
 
   useEffect(() => {
     ( async () => {
@@ -27,6 +40,7 @@ const Courses = () => {
         );
         const json = await res.json();
        if(filterValue !== undefined){
+         console.log(json.result)
         setCourses(json.result?.filter((dataItem: any, index: any) => dataItem.course_name?.toLowerCase().includes(filterValue?.toLowerCase())))
       }else if (filterAge !== 'All'){
         setCourses(json.result?.filter((dataItem: any, index: any) => dataItem.course_age === filterAge))
@@ -149,7 +163,7 @@ const Courses = () => {
         (!isNull(courses) && courses && updateCourses) && (
           <>
           {courses?.map((course:any, index: number) => 
-          <Link to={`/course/${course.course_id}`} className="mx-5 md:mx-0 my-10 relative text-slate-900 bg-accent-200 p-5 shadow-xl rounded-lg flex flex-wrap ">                
+          <Link to={`/course/${course.course_id}`} className="mx-5 md:mx-0 my-10 relative text-slate-900 bg-accent-200 p-5 shadow-xl rounded-lg flex flex-wrap " onClick={()=> fetchCourseID(course.course_id)}>                
           <div className="w-full md:w-1/3">
           {
               course.course_image ? (<>

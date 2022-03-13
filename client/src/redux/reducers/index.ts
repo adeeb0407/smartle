@@ -1,9 +1,10 @@
 import { combineReducers } from "redux";
-import fetchUser from "./fetchUsers"
+import {fetchUsers, courseIDFetch} from "./fetchUsers"
 
 
 const reducers = combineReducers({
-    fetchUser
+    fetchUsers,
+    courseIDFetch
 })
 
 export default reducers
