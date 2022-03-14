@@ -36,7 +36,7 @@ const Courses = () => {
     ( async () => {
 			try {
         const res = await fetch(
-          `http://localhost:8000/course`
+          `http://13.126.1.233:8000/course`
         );
         const json = await res.json();
        if(filterValue !== undefined){

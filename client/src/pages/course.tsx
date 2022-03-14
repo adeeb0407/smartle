@@ -21,6 +21,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/reducers';
 import axios from 'axios'
 
+import API from '../redux/api/api'
+
 const Course = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -61,14 +63,14 @@ const Course = () => {
 
   useEffect(() => {
 
-    axios.get<courseViewer[]>('http://localhost:8000/getcourseview/'+id)
+    API.get<courseViewer[]>('getcourseview/'+id)
     .then((res)=>{
       setCourseView(res.data)
     }).catch((err) => {
       console.log(err)
     })
 
-    axios.get<moduleViewer[]>('http://localhost:8000/getmoduleforcourse/'+id)
+    API.get<moduleViewer[]>('/getmoduleforcourse/'+id)
     .then((res)=>{
       setModuleView(res.data)
     }).catch((err) => {
