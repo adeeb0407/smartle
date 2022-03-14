@@ -101,7 +101,7 @@ const Courses = () => {
   // }, [filterAge]);
 
   return (<>
-    <GradientBlobT />
+    {/* <GradientBlobT /> */}
     <div className="md:w-8/12 mx-auto pb-20 relative z-10">
       <h2 className="text-3xl font-black pt-40 text-center">Explore our courses</h2>
       <p className="px-3 md:px-7 text-lg md:text-xl text-center mt-6">Specially designed courses aimed to pique children's interest, curiosity and learning. We have the best curriculum designed in discussion with top advisors from academia and the industry.</p>

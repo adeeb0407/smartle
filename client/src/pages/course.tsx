@@ -88,7 +88,7 @@ const Course = () => {
 
   return (
     <>
-    {
+    {/* {
       !isEnterprise ? (<>
         <div className="hidden md:block overflow-y-hidden h-full">
       <GradBlobTRSm />
@@ -98,9 +98,9 @@ const Course = () => {
           <div className="md:hidden block"><GradBlobRespBlue /></div>
           <div className="hidden md:block"><GradBlobBlueTR /></div>
       </>)
-    }
+    } */}
+     <RegisterInterestModal isEnterprise={isEnterprise} courseId={id} openInterest={openInterest} handleCloseInterest={handleCloseInterest} />
         <div className="mx-auto w-10/12 mt-12 ">
-        <RegisterInterestModal isEnterprise={isEnterprise} courseId={courseView[0]?.course_id} openInterest={openInterest} handleCloseInterest={handleCloseInterest} />
         <div className="z-20 relative flex flex-wrap flex-col-reverse md:flex-row">
             <div className="md:w-1/2 mt-10 md:mt-0 md:pr-10">
                 <h1 className="font-black text-3xl text-center md:text-left">{courseView[0]?.course_name}</h1>
@@ -129,9 +129,9 @@ const Course = () => {
               <React.Fragment>
                   <div className="w-40 text-center mt-2">
                     <p className="text-gray-700">Number of Classes</p>
-                      <div className={`font-black`}>
+                    <div className={`font-black ${courseView[0]?.course_type.includes('Self-Paced') ? 'text-2xl' : 'text-5xl'} text-center text-color-400`}>
                           <span className='text-color-400 text-3xl'></span>
-                          <span className='text-color-400 text-3xl'>{courseView[0]?.course_numberofclasses}</span></div>
+                          <span className='text-color-400 text-5xl'>{courseView[0]?.course_numberofclasses}</span></div>
                       <p className="text-gray-700"></p>
                   </div>
                   <div style={{ height: '0.5px' }} className="w-2/3 bg-slate-300 sm:hidden block"></div>
@@ -141,8 +141,7 @@ const Course = () => {
                     <p className="text-gray-700">Duration</p>
                       <div className={`font-black`}>
                           <span className='text-color-400 text-3xl'></span>
-          
-                          <span className='text-color-400 text-3xl'>{courseView[0]?.course_duration/60}</span></div>
+                          <span className='text-color-400 text-5xl'>{courseView[0]?.course_duration/60}</span></div>
                       <p className="text-gray-700">Min Per Class</p>
                   </div>
                   <div style={{ height: '0.5px' }} className="w-2/3 bg-slate-300 sm:hidden block"></div>
@@ -152,8 +151,7 @@ const Course = () => {
                     <p className="text-gray-700">Live-class ratio</p>
                       <div className={`font-black`}>
                           <span className='text-color-400 text-3xl'></span>
-          
-                          <span className='text-color-400 text-3xl'>1:6</span></div>
+                          <span className='text-color-400 text-5xl'>1:6</span></div>
                       <p className="text-gray-700"></p>
                   </div>
                   <div style={{ height: '0.5px' }} className="w-2/3 bg-slate-300 sm:hidden block"></div>
@@ -163,7 +161,7 @@ const Course = () => {
                     <p className="text-gray-700">Age</p>
                       <div className={`font-black`}>
                           <span className='text-color-400 text-3xl'></span>
-                          <span className='text-color-400 text-3xl'>{courseView[0]?.course_age}</span></div>
+                          <span className='text-color-400 text-5xl'>{courseView[0]?.course_age}</span></div>
                       <p className="text-gray-700">Years</p>
                   </div>
                   <div style={{ height: '0.5px' }} className="w-2/3 bg-slate-300 sm:hidden block"></div>
@@ -171,9 +169,9 @@ const Course = () => {
 
                   <div className="w-40 text-center mt-2">
                     <p className="text-gray-700">Cost</p>
-                      <div className={`font-black`}>
-                          <span className='text-color-400 text-3xl'></span>
-                          <span className='text-color-400 text-3xl'>{courseView[0]?.course_cost}</span></div>
+                    <div className={`font-black ${courseView[0]?.course_cost.includes('Self-Paced') ? 'text-2xl' : 'text-5xl'} text-center text-color-400`}>
+                          <span className='text-color-400 text-3xl'>$</span>
+                          <span className='text-color-400 text-5xl'>{courseView[0]?.course_cost}</span></div>
                       <p className="text-gray-700">per Class</p>
                   </div>
               </React.Fragment>
@@ -222,9 +220,9 @@ const Course = () => {
         </Transition>
       </div>
       
-  </div>;
+  </div>
         </div>
-       
+        <CourseCTA isEnterprise={isEnterprise} courseId={id} />
         </>
       );
 }

@@ -32,9 +32,9 @@ const Home = () => {
         </div>
       </div>
       <div className="md:block hidden">
-        <GradientBlobTR />
+        {/* <GradientBlobTR /> */}
         {/* <GradBlobTRSm /> */}
-        <GradientBlobBL />
+        {/* <GradientBlobBL /> */}
       </div>
     </div>
   </>);
