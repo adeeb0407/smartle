@@ -21,6 +21,8 @@ import CompletePrivacyPolicy from './pages/Complete/CompletePrivacyPolicy';
 import CompleteEnterprise from './pages/Complete/CompleteEnterprise';
 import Login from './auth/Login';
 import Signup from './auth/Signup';
+import RegisterChild from './auth/RegisterChild';
+import SelectLearner from './auth/SelectLearner';
 
 // Lazy loaded components to improve base performance.
 const Home = lazy(() => import('./pages/home'));
@@ -77,6 +79,8 @@ function App() {
                 <Route path='course-content' element={<CourseContent/>} />
                 <Route path="/login" element={<Login/>} />
                 <Route path="/signup" element={<Signup/>} />
+                <Route path="/registerchild" element={<RegisterChild/>} />
+                <Route path="/learner" element={<SelectLearner/>} />
                 <Route path="*" element={<CompleteError />} />
                
           </Routes>
