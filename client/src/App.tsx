@@ -20,6 +20,7 @@ import CompleteLegal from './pages/Complete/CompleteLegal';
 import CompletePrivacyPolicy from './pages/Complete/CompletePrivacyPolicy';
 import CompleteEnterprise from './pages/Complete/CompleteEnterprise';
 import Login from './auth/Login';
+import Signup from './auth/Signup';
 
 // Lazy loaded components to improve base performance.
 const Home = lazy(() => import('./pages/home'));
@@ -75,7 +76,7 @@ function App() {
                 <Route path="/privacy-policy" element={<CompletePrivacyPolicy />} />
                 <Route path='course-content' element={<CourseContent/>} />
                 <Route path="/login" element={<Login/>} />
-                <Route path="/signup" element={<Login/>} />
+                <Route path="/signup" element={<Signup/>} />
                 <Route path="*" element={<CompleteError />} />
                
           </Routes>

@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { HashLink as Link } from 'react-router-hash-link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { purple } from '@mui/material/colors';
-import { textAlign } from '@mui/system';
 import Header from '../components/organisms/Header';
 import Footer from '../components/organisms/Footer';
 
@@ -69,7 +68,7 @@ const Login = () => {
           </Grid>
          </Box>
           <Box style={{width: "80%", margin: "auto", textAlign:"center"}}>
-            <Link to={"/login"} >
+            <Link to={"/"} >
               <ThemeProvider theme={redTheme}>
                 <Button  variant="contained" style={{width:"100%", marginTop: "20px"}} color="primary">
                     Login
