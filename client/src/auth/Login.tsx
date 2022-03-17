@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { purple } from '@mui/material/colors';
 import Header from '../components/organisms/Header';
 import Footer from '../components/organisms/Footer';
+import './auth.css'
 
 const Login = () => {
 
@@ -29,17 +30,25 @@ const Login = () => {
   return (
     <>
     <Header />
-    <Box width={"90%"} margin="auto" marginBottom={"20px"}>
-      <Typography variant='h4' fontWeight={"700"}>Get started with smartle</Typography>
-      <Typography variant='h5' mt={"30px"} mb="5px" fontWeight={"700"}>Login to your account</Typography>
-      <Typography fontSize={"14px"}>Complete your learning journey</Typography>
-      <Box width={"40%"} style={{backgroundColor: "#F9EDF5", borderRadius: "5px", marginTop: "10px", color: "#917EBD"}}>
-        <form onSubmit={(e) => handleSubmit(e)}>
+    <div className='select-learner'>
+    <div>
+		<h1 className='font-black text-4xl'>Get started with smartle</h1>
+		<p className = 'text-stone-600'>Don't have an account Signup now !!</p>
+		</div>
+      {/* <Typography variant='h4' fontWeight={"700"}>Get started with smartle</Typography> */}
+      <p className='text-center md:text-left text-xl md:text-4xl mt-4 md:mt-8 text-stone-600'>
+            Login to your Account
+          </p>
+      <Typography fontSize={"14px"}>Complete your learning journey!</Typography>
+      <Box className =  'form-class' width={"40%"} style={{backgroundColor: "#F9EDF5", borderRadius: "5px", marginTop: "10px", color: "#917EBD"}}>
+        <form onSubmit={(e) => handleSubmit(e)} >
           <Box style={{width: "80%", margin: "auto", paddingTop: "10px"}}>
             <Box style={{marginTop: "20px"}}>
               <label style={{marginTop: "100px"}}>Email</label>
             </Box>
             <input type={"email"} 
+             placeholder="Enter your email"
+             className = 'form-input'
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
               style={{padding: "8px", width: "100%", borderRadius: "3px", marginBottom: "20px"}}></input>
@@ -49,7 +58,9 @@ const Login = () => {
             <label>Password</label>
            </div>
           <input 
+          className = 'form-input'
             type={"password"}
+            placeholder="Enter your password"
             value={password} 
             onChange={(e) => setPassword(e.target.value)}
             style={{padding: "8px", width: "100%", borderRadius: "3px"}}></input>
@@ -70,7 +81,7 @@ const Login = () => {
           <Box style={{width: "80%", margin: "auto", textAlign:"center"}}>
             <Link to={"/"} >
               <ThemeProvider theme={redTheme}>
-                <Button  variant="contained" style={{width:"100%", marginTop: "20px"}} color="primary">
+                <Button className = 'auth-button' variant="contained" style={{width:"100%", marginTop: "20px", backgroundColor : '#917EBD'}}>
                     Login
                 </Button>
               </ThemeProvider>
@@ -80,18 +91,15 @@ const Login = () => {
           <Link to={"/signup"}                            
               >
                 <ThemeProvider theme={redTheme}>
-              <Button style={{width:"100%"}} variant="outlined" color="primary">
+              <Button className = 'auth-button' style={{width:"100%", color : '#917EBD', borderColor : '#917EBD'}} variant="outlined">
                   Signup
               </Button>
               </ThemeProvider>
         </Link>
         </Box>
         </form>
-        <div className="">
-       
-      </div>
       </Box>
-    </Box>
+    </div>
     <Footer />
     </>
   );
