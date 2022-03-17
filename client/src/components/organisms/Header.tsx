@@ -67,10 +67,16 @@ const Header = () => {
                         })}
                     </div>
                     <div className="">
-                            <Link to={linkAdd}                            
+                        <Link to={linkAdd}                            
                             >
                                 <Button className={`bg-${contactColor}-400 text-white rounded-md font-bold shadow-none drop-shadow-lg px-8 py-2 `}>
                                     Contact Us
+                                </Button>
+                        </Link>
+                        <Link to={"/login"}                            
+                            >
+                                <Button className={`bg-${contactColor}-400 text-white rounded-md font-bold shadow-none drop-shadow-lg px-8 py-2 ml-5`} >
+                                    Login
                                 </Button>
                         </Link>
                     </div>

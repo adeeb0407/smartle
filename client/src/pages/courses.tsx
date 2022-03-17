@@ -6,12 +6,12 @@ import { getCourses } from '../util/api';
 import { isNull } from '../util/helpers';
 import { TopGrad } from '../util/resources/vector';
 import { Clock, Card } from '../util/resources';
-
+import axios from 'axios';
 import { actionCreators } from '../redux';
 import { RootState } from '../redux/reducers';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+import API from '../redux/api/api';
 
 const Courses = () => {
   const [courses, setCourses] = useState<any>(undefined);
@@ -25,7 +25,6 @@ const Courses = () => {
   const [filterValue, setFilterValue] = useState<string | undefined>(undefined);
   const [filterAge, setFilterAge] = useState<string | undefined>('All');
   
-  
   const dispatch = useDispatch();
   const { fetchUsers, fetchCourseID} = bindActionCreators(actionCreators, dispatch)
 
@@ -33,11 +32,23 @@ const Courses = () => {
   console.log(course_id)
 
   useEffect(() => {
+    
+  });
+  useEffect(() => {
     ( async () => {
 			try {
         const res = await fetch(
           `http://13.126.1.233:8000/course`
         );
+
+      // const res = axios({
+      //   method: 'get',
+      //   url: API + '/course',
+      // }).then(response => {
+      //   console.log(response.data);
+      //   return response.data;
+      // });
+
         const json = await res.json();
        if(filterValue !== undefined){
          console.log(json.result)
@@ -53,23 +64,23 @@ const Courses = () => {
 		})();
   }, [filterAge, filterValue])
 
-  // useEffect(() => {
-  //   if (!isNull(courses) && !isNull(ogCourses)) {    
-  //     setFilterAge(undefined);
-  //     setCourses([]);
-  //     let lclCourses = [ ...ogCourses ];
-  //     if (isNull(filterValue)) setCourses(lclCourses);  
-  //     (async () => {
-  //       let newlist  = await courses?.filter((dataItem: any, index: any) => dataItem?.course_age === filterAge)
+  useEffect(() => {
+    if (!isNull(courses) && !isNull(ogCourses)) {    
+      setFilterAge(undefined);
+      setCourses([]);
+      let lclCourses = [ ...ogCourses ];
+      if (isNull(filterValue)) setCourses(lclCourses);  
+      (async () => {
+        let newlist  = await courses?.filter((dataItem: any, index: any) => dataItem?.course_age === filterAge)
         
-  //       // lclCourses?.filter(
-  //       //   (course: any) => course.title?.toLowerCase().includes(filterValue?.toLowerCase())
-  //       // )      
-  //       setCourses(newlist);
-  //       setUpdateCourses(updateCourses+1)
-  //     })();
-  //   }
-  // }, [filterValue]);
+        // lclCourses?.filter(
+        //   (course: any) => course.title?.toLowerCase().includes(filterValue?.toLowerCase())
+        // )      
+        setCourses(newlist);
+        setUpdateCourses(updateCourses+1)
+      })();
+    }
+  }, [filterValue]);
   
 
   // useEffect(() => {

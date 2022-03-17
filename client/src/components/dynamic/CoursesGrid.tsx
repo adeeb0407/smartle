@@ -25,7 +25,7 @@ const CoursesGrid = ({ courses, color = 'accent-200', elementWidth='sm:w-1/2 md:
     
   async function requestSubjects() {
     const res = await fetch(
-      `http://localhost:8000/coursesonhome`
+      `http://13.126.1.233:8000/coursesonhome`
     );
     const json = await res.json();
     console.log(subjects);
