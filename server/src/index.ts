@@ -7,6 +7,7 @@ import studentRouter from './routes/studentRoutes';
 import coursesRouter from './routes/coursesRoutes';
 import parentRouter from './routes/parentRoutes';
 import moduleRouter from './routes/moduleRoutes';
+import authRoutes from './routes/authRoutes';
 
 const app = express()
 dotenv.config()
@@ -25,6 +26,7 @@ app.use('/trial', trialRouter);
 app.use('/', studentRouter);
 app.use('/', coursesRouter);
 app.use('/', parentRouter);
+app.use('/', authRoutes);
 
 app.get("/", (req: Request, res: Response): void => {
   res.json({ message: "Smartle Backend" });
