@@ -23,11 +23,13 @@ function RegisterChild() {
     },
   });
 
-  const [value, setValue] = React.useState(new Date("2014-08-18T21:11:54"));
+  // const [value, setValue] = React.useState(new Date("2014-08-18T21:11:54"));
 
   const handleChange = (newValue: any) => {
-    setValue(newValue);
+    setAge(newValue);
   };
+
+  const AGE = [5,6,7,8,9,10,11,12,13,14,15,15,17,18];
 
   const [childName, setChildName] = useState("");
   const [age, setAge] = useState("");
@@ -115,7 +117,7 @@ function RegisterChild() {
               className="childacc-inline"
               style={{ width: "80%", margin: "auto", paddingTop: "10px" }}
             >
-              <input
+              {/* <input
                 className="form-input"
                 type={"number"}
                 placeholder="Age"
@@ -127,19 +129,29 @@ function RegisterChild() {
                   borderRadius: "3px",
                   marginRight: "10px",
                 }}
-              />
+              /> */}
 
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DesktopDatePicker
-                  label="Date desktop"
-                  inputFormat="MM/dd/yyyy"
-                  value={value}
-                  onChange={handleChange}
-                  renderInput={(params) => (
-                    <TextField {...params} className="form-input" style = {{backgroundColor:'white' }} />
-                  )}
-                />
-              </LocalizationProvider>
+                <label htmlFor="age" style={{marginTop:"20px", marginBottom:"20px"}}>
+                    Age: 
+                    <select 
+                    id="animal" 
+                    value={age} 
+                    onChange={e=> setAge(e.target.value)}
+                    onBlur={e=> setAge(e.target.value)}
+                    style={{padding: "10px", marginLeft:"10px", fontSize:"20px", borderRadius: "5px"}}
+                    >
+                        <option />
+                        {
+                            AGE.map(age => (
+                                <option value={age} key={age}>
+                                    {age}
+                                </option>
+                            ))
+                        }
+                    </select>
+                </label>
+
+             
             </Box>
             <Box style={{ width: "80%", margin: "auto", textAlign: "center" }}>
               <Link to={"/"}>

@@ -22,9 +22,15 @@ import { RootState } from '../redux/reducers';
 import axios from 'axios'
 
 import API from '../redux/api/api'
+import { Button, Typography } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const Course = () => {
   const { id } = useParams<{ id: string }>();
+
+  const redTheme = createTheme({ palette: { primary:{
+    main:  '#917EBD'}
+  } });
 
   const [course, setCourse] = useState<any>(undefined);
   const [fail, setFail] = useState<string | undefined>(undefined);
@@ -51,6 +57,7 @@ const Course = () => {
     course_image: string;
     course_numberofclasses: number;
     course_duration: number;
+    course_status: string | null;
 }
 
   interface moduleViewer {
@@ -90,6 +97,7 @@ const Course = () => {
 
   return (
     <>
+     
     {/* {
       !isEnterprise ? (<>
         <div className="hidden md:block overflow-y-hidden h-full">
@@ -101,18 +109,38 @@ const Course = () => {
           <div className="hidden md:block"><GradBlobBlueTR /></div>
       </>)
     } */}
-     <RegisterInterestModal isEnterprise={isEnterprise} courseId={id} openInterest={openInterest} handleCloseInterest={handleCloseInterest} />
         <div className="mx-auto w-10/12 mt-12 ">
         <div className="z-20 relative flex flex-wrap flex-col-reverse md:flex-row">
             <div className="md:w-1/2 mt-10 md:mt-0 md:pr-10">
                 <h1 className="font-black text-3xl text-center md:text-left">{courseView[0]?.course_name}</h1>
                 <p className="md:text-lg mt-4">{courseView[0]?.course_description}</p>
+               
                 {
                     !isEnterprise && (<>
                         <h1 className="font-black md:text-xl mt-6">Learning Objectives</h1>
                         <p className="md:text-lg mt-4">{courseView[0]?.course_learningobjective}</p>
                     </>)
                 }
+                 <ThemeProvider theme={redTheme}>
+                  {courseView[0]?.course_status === 'WAITLISTED' && <Button variant='contained' style={{marginTop:"30px"}}>
+                    <Typography fontWeight={"500"} fontSize="18px">
+                      Register your interest
+                    </Typography>
+                    </Button>}
+                    {courseView[0]?.course_status === 'ACTIVE' && <><Button variant='contained' 
+                    style={{marginTop:"30px", marginRight:"30px",paddingLeft: "25px", paddingRight:"25px"}}>
+                    <Typography fontWeight={"500"} fontSize="18px">
+                      Book Course
+                    </Typography>
+                    </Button>
+                    <Button variant='contained' style={{marginTop:"30px", paddingLeft: "40px", paddingRight:"40px"}}>
+                    <Typography fontWeight={"500"} fontSize="18px">
+                      Book Trial
+                    </Typography>
+                    </Button>
+                    </>}
+                  </ThemeProvider>
+                <RegisterInterestModal isEnterprise={false} courseId={id} openInterest={openInterest} handleCloseInterest={handleCloseInterest} />
                 {/* <div className="flex gap-4">
                     <Button
                         onClick={handleOpenInterest}
@@ -224,7 +252,7 @@ const Course = () => {
       
   </div>
         </div>
-        <CourseCTA isEnterprise={isEnterprise} courseId={id} />
+        <CourseCTA isEnterprise={isEnterprise} courseId={id} status={courseView[0]?.course_status}/>
         </>
       );
 }

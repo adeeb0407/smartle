@@ -69,7 +69,7 @@ const Header = () => {
                     <div className="">
                         <Link to={linkAdd}                            
                             >
-                                <Button className={`bg-${contactColor}-400 text-white rounded-md font-bold shadow-none drop-shadow-lg px-8 py-2 `}>
+                                <Button className={`bg-${contactColor}-400 text-white rounded-md font-bold shadow-none drop-shadow-lg px-3.5 py-2 `}>
                                     Contact Us
                                 </Button>
                         </Link>
