@@ -9,9 +9,6 @@ import {
 	CognitoUser,
 } from 'amazon-cognito-identity-js';
 
-
-import * as AWS from 'aws-sdk/global';
-
 const poolData : any = {
 	UserPoolId : 'ap-south-1_aFlE9qxGz',
 	ClientId : '7trqouonoof0uidoq1psmqbohh'
@@ -66,14 +63,16 @@ let userData = {
 	Username: email,
 	Pool: userPool,
 };
-// var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
-//     cognitoUser.confirmRegistration(code, true, function(err : any, result : any) {
-//         if (err) {
-//             alert(err);
-//             return;
-//         }
-//         console.log('call result: ' + result);
-//     });
+ var cognitoUser = new CognitoUser(userData);
+     cognitoUser.confirmRegistration(code, true, function(err : any, result : any) {
+         if (err) {
+           console.log(err);
+           res.send(err);
+            return;
+         }
+         console.log('call result: ' + result);
+         res.send('call result: ' + result);
+    });
  }
 
 export const login = (req: Request, res: Response) => {
