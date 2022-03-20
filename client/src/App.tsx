@@ -4,6 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Header from './components/organisms/Header';
 import { ThemeProvider, createTheme } from '@mui/material';
 import Footer from './components/organisms/Footer';
+import VerifyingUser from './auth/VerifyingUser';
 
 //redux copy
 import { actionCreators } from './redux';
@@ -81,6 +82,7 @@ function App() {
                 <Route path="/signup" element={<Signup/>} />
                 <Route path="/registerchild" element={<RegisterChild/>} />
                 <Route path="/learner" element={<SelectLearner/>} />
+                <Route path="/otp" element={<VerifyingUser/>} />
                 <Route path="*" element={<CompleteError />} />
                
           </Routes>

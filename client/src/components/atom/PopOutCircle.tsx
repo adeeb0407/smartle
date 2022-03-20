@@ -28,7 +28,7 @@ const PopOutCircle = ({ image, imageTop='3rem', imageLeft='0rem', imagePos='left
     } as React.CSSProperties;
 
     return (
-        <div  style={style} className={`${extraClasses} md:ml-40 ${borderColor==='blue' ? styles.contrastBorder : ''} ${styles.box} `}>
+        <div  style={style} className={`${extraClasses} md:m-auto ${borderColor==='blue' ? styles.contrastBorder : ''} ${styles.box} `}>
             <div className={`${styles.circle} z-20 rounded-full ${circleBg}`}></div>
             <div className={`rounded-b-full z-30 ${styles.image}`}></div>
         </div>  
