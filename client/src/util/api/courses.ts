@@ -8,12 +8,13 @@ export const videoBase = "https://www.youtube.com/embed/";
 export async function getCourses(param?: any, value?: any, compare: any = "=", ent:boolean=false) {
 
   const res = await fetch(
-    `http://localhost:8000/coursesonhome`
+    `http://13.126.1.233:8000/coursesonhome`
   );
  
   const json = await res.json();
+  console.log(json)
  
-  let cl = json;
+  let cl = json.result;
   
 
   if (param && value) {
@@ -32,7 +33,7 @@ export async function getCourses(param?: any, value?: any, compare: any = "=", e
     }
     finalCourses.push(lclCourse);
   })
-  const courses: any = json;
+  const courses: any = json.result;
   console.log(courses);
   return courses;
 }

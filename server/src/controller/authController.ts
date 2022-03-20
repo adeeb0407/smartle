@@ -21,6 +21,8 @@ export const signUp = ((req: Request, res: Response) => {
 
 	const {email, name, password} = req.body
 
+	console.log(req.body)
+
 	let attributeList = [];
 
 	const emailData: any = {
@@ -48,7 +50,7 @@ export const signUp = ((req: Request, res: Response) => {
 			res.send(err.message || JSON.stringify(err));
 			return;
 		}
-		res.send({data : result.user.username, res})
+		res.send(result.user)
 		var cognitoUser = result.user;
 	});
 

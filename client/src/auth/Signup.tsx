@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { purple } from '@mui/material/colors';
 import AuthHeader from '../components/organisms/AuthHeader';
 import API from '../redux/api/api';
+import Alert from '@mui/material/Alert';
 import './auth.css'
 
 const Signup = () => {
@@ -12,23 +13,52 @@ const Signup = () => {
   const redTheme = createTheme({ palette: { primary:{
     main:  purple[900]}
   } });
+  
+  const [loginToken, setLoginToken] = useState([]);
 
   const [name, setName] = useState("");
-  const [email, setEmail] = useState<string>("");
+  
+    interface Signup {
+      name: string;
+      email: string;
+      password: string;
+    } 
   const [password, setPassword] = useState("");
-  const [rememberme, setRemberme] = useState(false);
 
-  console.log("name: " + name + "\nemail: " + email + "\npassword: " + password + "\nremberme: " + rememberme);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const [signupCreds, setSignupCreds] = useState(
+    {
+      name: '',
+      email: '',
+      password: ''
+    }
+  );
+  console.log(signupCreds)
+
+  const handelChange = (e: any) => {
+
+    const {name, value} = e.target
+    setSignupCreds({...signupCreds, [name]:value})
   }
 
-  interface Signup {
-    name: string;
-    email: string;
-    password: string;
-  } 
+  const [rememberme, setRemberme] = useState(false);
+
+  // console.log("name: " + name + "\nemail: " + email + "\npassword: " + password + "\nremberme: " + rememberme);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+    event.preventDefault();
+  
+    await API.post('signup', signupCreds)
+    .then((res)=>{
+      setLoginToken(res.data)
+      console.log(res.data)
+    }).catch((err) => {
+      console.log(err)
+    })
+
+  }
 
   // useEffect(() => {
 
@@ -66,8 +96,9 @@ const Signup = () => {
             <input type={"text"} 
              className = 'form-input'
              placeholder="Enter your Name"
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
+             name='name'
+              value={signupCreds.name} 
+              onChange={handelChange} 
               style={{padding: "8px", width: "100%", borderRadius: "3px"}}></input>
           </Box>
           <Box style={{width: "80%", margin: "auto"}}>
@@ -76,9 +107,10 @@ const Signup = () => {
             </Box>
             <input type={"email"} 
              className = 'form-input'
+             name='email'
              placeholder="Enter your Email"
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
+              value={signupCreds.email} 
+              onChange={handelChange} 
               style={{padding: "6px", width: "100%", borderRadius: "3px", marginBottom: "10px"}}></input>
           </Box>
          <Box style={{width: "80%", margin: "auto"}}>
@@ -88,9 +120,10 @@ const Signup = () => {
           <input 
             type={"password"}
             className = 'form-input'
+            name = 'password'
             placeholder="Enter Password"
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)}
+            value={signupCreds.password} 
+            onChange={handelChange}
             style={{padding: "8px", width: "100%", borderRadius: "3px"}}></input>
          </Box>
          <Box style={{width: "80%", margin: "auto", marginTop:"10px"}}>
@@ -106,14 +139,14 @@ const Signup = () => {
             style={{padding: "6px", width: "100%", borderRadius: "3px"}}></input>
          </Box>
          <Box style={{width: "80%", margin: "auto", textAlign:"center", marginTop: "20px"}}>
-          <Link to={"/"}                            
-              >
+          {/* <Link to={"/"}                            
+              > */}
                 <ThemeProvider theme={redTheme}>
-              <Button className = 'auth-button' style={{width:"100%", backgroundColor : '#917EBD'}} variant="contained">
+              <Button type='submit' className = 'auth-button' style={{width:"100%", backgroundColor : '#917EBD'}} variant="contained">
                   Signup
               </Button>
               </ThemeProvider>
-        </Link>
+        {/* </Link> */}
         </Box>
           <Box style={{width: "80%", margin: "auto", textAlign:"center", paddingBottom: "20px"}}>
             <Link to={"/login"} >
@@ -123,6 +156,9 @@ const Signup = () => {
                 </Button>
               </ThemeProvider>
             </Link>
+            {errorMsg !== '' && <Alert style = {{marginTop: "20px"}} variant="outlined" severity="error">
+        {errorMsg}
+      </Alert>}
           </Box>
         </form>
       </Box>

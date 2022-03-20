@@ -3,6 +3,7 @@ import CourseGridElement from '../dynamic/CourseGridElement';
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper';
+import API from '../../redux/api/api';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
@@ -27,9 +28,10 @@ const CoursesGrid = ({ courses, color = 'accent-200', elementWidth='sm:w-1/2 md:
     const res = await fetch(
       `http://13.126.1.233:8000/coursesonhome`
     );
+    console.log(res)
     const json = await res.json();
     console.log(subjects);
-    setSubjects(json);
+    setSubjects(json.result);
 }
 
     const isMobile = useMediaQuery('(max-width:1000px)');
@@ -39,7 +41,7 @@ const CoursesGrid = ({ courses, color = 'accent-200', elementWidth='sm:w-1/2 md:
                 {
                     !isMobile ? (<>
                         {
-                    subjects.map((course:any, key:any) => {
+                    subjects?.map((course:any, key:any) => {
                         return (                        
                             <CourseGridElement width={elementWidth} color={color} course={course} key={key} />   
                         );

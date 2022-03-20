@@ -9,23 +9,58 @@ import PopOutCircle from '../components/atom/PopOutCircle';
 import { EnterpriseBannerGirl as BImg } from '../util/resources';
 import AuthHeader from '../components/organisms/AuthHeader';
 import useMediaQuery from '@mui/material/useMediaQuery'
+import API from '../redux/api/api';
 import './auth.css';
+import Alert from '@mui/material/Alert';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+
+  const navigate = useNavigate()
 
   const redTheme = createTheme({ palette: { primary:{
     main:  purple[900]}
   } });
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [rememberme, setRemberme] = useState(false);
 
+  const [loginToken, setLoginToken] = useState([]);
 
-  console.log("email: " + email + "\npassword: " + password + "\nremberme: " + rememberme);
+  const [loginCreds, setLoginCreds] : any = useState(
+    {
+      email: '',
+      password: ''
+    }
+  );
+  console.log(loginCreds)
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handelChange = (event: any) => {
+
+   const {name , value } : any = event.target
+   setLoginCreds({...loginCreds, [name]:value})
+
+  }
+
+  const  handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
     event.preventDefault();
+
+    await API.post('login', loginCreds)
+    .then((res)=>{
+      console.log(res);
+      if(res.data === 'Incorrect username or password.'){
+        setErrorMsg(res.data)
+      }else{
+      setLoginToken(res.data?.accessToken)
+      localStorage.setItem('user-data', JSON.stringify(res.data?.accessToken))
+      console.log(res.data?.accessToken)
+      setErrorMsg('')
+      navigate('/')
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
   }
 
   const isMobile = useMediaQuery('(max-width:1200px)');
@@ -59,8 +94,9 @@ const Login = () => {
             <input type={"email"} 
              placeholder="Enter your email"
              className = 'form-input'
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
+             name = 'email'
+              value={loginCreds.email} 
+              onChange={handelChange} 
               style={{padding: "8px", width: "100%", borderRadius: "3px", marginBottom: "20px"}}></input>
           </Box>
          <Box style={{width: "80%", margin: "auto"}}>
@@ -71,8 +107,9 @@ const Login = () => {
           className = 'form-input'
             type={"password"}
             placeholder="Enter your password"
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)}
+            name = 'password'
+            value={loginCreds.password} 
+            onChange={handelChange}
             style={{padding: "8px", width: "100%", borderRadius: "3px"}}></input>
          </Box>
          <Box style={{width: "80%", margin: "auto", marginTop: "10px", marginBottom: "10px"}}>
@@ -89,13 +126,13 @@ const Login = () => {
           </Grid>
          </Box>
           <Box style={{width: "80%", margin: "auto", textAlign:"center"}}>
-            <Link to={"/"} >
+            {/* <Link to={"/"} > */}
               <ThemeProvider theme={redTheme}>
-                <Button className = 'auth-button' variant="contained" style={{width:"100%", marginTop: "20px", backgroundColor : '#917EBD'}}>
+                <Button type = 'submit' className = 'auth-button' variant="contained" style={{width:"100%", marginTop: "20px", backgroundColor : '#917EBD'}}>
                     Login
                 </Button>
               </ThemeProvider>
-            </Link>
+            {/* </Link> */}
           </Box>
           <Box style={{width: "80%", margin: "auto", textAlign:"center", marginTop: "20px", paddingBottom: "20px"}}>
           <p className = 'text-stone-600'>Don't have an account Signup now !!</p>
@@ -107,6 +144,10 @@ const Login = () => {
               </Button>
               </ThemeProvider>
         </Link>
+        <br/>
+         {errorMsg !== '' && <Alert style = {{marginTop: "20px"}} variant="outlined" severity="error">
+        {errorMsg}
+      </Alert>}
         </Box>
         </form>
       </Box>
@@ -141,10 +182,11 @@ const Login = () => {
               <label style={{marginTop: "100px"}}>Email</label>
             </Box>
             <input type={"email"} 
-             placeholder="Enter your email"
-             className = 'form-input'
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
+            placeholder="Enter your email"
+            className = 'form-input'
+            name = 'email'
+             value={loginCreds.email} 
+             onChange={handelChange} 
               style={{padding: "8px", width: "100%", borderRadius: "3px", marginBottom: "20px"}}></input>
           </Box>
          <Box style={{width: "80%", margin: "auto"}}>
@@ -155,8 +197,9 @@ const Login = () => {
           className = 'form-input'
             type={"password"}
             placeholder="Enter your password"
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)}
+            name = 'password'
+            value={loginCreds.password} 
+            onChange={handelChange}
             style={{padding: "8px", width: "100%", borderRadius: "3px"}}></input>
          </Box>
          <Box style={{width: "80%", margin: "auto", marginTop: "10px", marginBottom: "10px"}}>
@@ -175,7 +218,7 @@ const Login = () => {
           <Box style={{width: "80%", margin: "auto", textAlign:"center"}}>
             <Link to={"/"} >
               <ThemeProvider theme={redTheme}>
-                <Button className = 'auth-button' variant="contained" style={{width:"100%", marginTop: "20px", backgroundColor : '#917EBD'}}>
+                <Button type = 'submit' className = 'auth-button' variant="contained" style={{width:"100%", marginTop: "20px", backgroundColor : '#917EBD'}}>
                     Login
                 </Button>
               </ThemeProvider>

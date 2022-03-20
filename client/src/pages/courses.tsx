@@ -38,16 +38,8 @@ const Courses = () => {
     ( async () => {
 			try {
         const res = await fetch(
-          `http://13.126.1.233:8000/course`
+          `http://13.126.1.233:8000/coursesonhome`
         );
-
-      // const res = axios({
-      //   method: 'get',
-      //   url: API + '/course',
-      // }).then(response => {
-      //   console.log(response.data);
-      //   return response.data;
-      // });
 
         const json = await res.json();
        if(filterValue !== undefined){
