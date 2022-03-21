@@ -3,11 +3,21 @@ import React, { useState } from "react";
 import AuthHeader from '../components/organisms/AuthHeader';
 import PopOutCircle from '../components/atom/PopOutCircle';
 import { EnterpriseBannerGirl as BImg } from '../util/resources';
-import API from '../redux/api/api';
 import { Axios } from 'axios';
+import API from '../redux/api/api';
+import { useNavigate } from 'react-router-dom';
+import Alert from '@mui/material/Alert';
 
 const VerifyingUser = () => {
     const [otp, setOtp] = useState(new Array(6).fill(""));
+    const [codeResult, setCodeResult] = useState('');
+    const [errorMsg, setErrorMsg] = useState("");
+    const [codeCreds, setCodeCreds] = useState({
+        email : localStorage.getItem('username'),
+        code : otp
+    });
+
+    const navigate = useNavigate();
 
     const handleChange = (element:any, index: any) => {
         if (isNaN(element.value)) return false;
@@ -19,6 +29,24 @@ const VerifyingUser = () => {
             element.nextSibling.focus();
         }
     };
+    const handelCodeSubmit = async () => {
+
+        await API.post('code', codeCreds)
+        .then((res)=>{
+            if(otp.length <= 5){
+                setErrorMsg("Please Enter the Compelete Code")
+            }
+            else if(typeof res.data === 'object'){
+                setErrorMsg(res.data.code)
+            }else{
+            setCodeResult(res.data)
+            localStorage.removeItem('username')
+            navigate('/')
+        }
+        }).catch((err) => {
+          console.log(err)
+        })
+    }
 
     return (
         <>
@@ -72,12 +100,7 @@ const VerifyingUser = () => {
                             className = 'auth-button' 
                             variant="outlined" 
                             style={{width:"200px", marginTop: "20px", background: '#917EBD', borderColor : '#917EBD', color: 'white'}} 
-                            onClick={e =>
-                                {
-                                    console.log(otp.join(""));
-                                    alert("Entered OTP is " + otp.join(""));
-                                }
-                            }
+                            onClick={handelCodeSubmit}
                         >
                             Verify OTP
                         </Button>
@@ -85,6 +108,9 @@ const VerifyingUser = () => {
                         
                     </Typography>
                 </Box>
+                {errorMsg !== '' && <Alert style = {{marginTop: "20px", width: "50%"}} variant="outlined" severity="error">
+        {errorMsg}
+      </Alert>}
             </Box>
         </>
     );

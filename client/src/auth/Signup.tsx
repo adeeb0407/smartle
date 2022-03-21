@@ -6,6 +6,7 @@ import { purple } from '@mui/material/colors';
 import AuthHeader from '../components/organisms/AuthHeader';
 import API from '../redux/api/api';
 import Alert from '@mui/material/Alert';
+import { useNavigate } from 'react-router-dom';
 import './auth.css'
 
 const Signup = () => {
@@ -14,8 +15,8 @@ const Signup = () => {
     main:  purple[900]}
   } });
   
-  const [loginToken, setLoginToken] = useState([]);
-
+  const [loginToken, setLoginToken] = useState<any>([]);
+  const navigate = useNavigate()
   const [name, setName] = useState("");
   
     interface Signup {
@@ -26,6 +27,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
 
   const [errorMsg, setErrorMsg] = useState("");
+
 
   const [signupCreds, setSignupCreds] = useState(
     {
@@ -52,8 +54,13 @@ const Signup = () => {
   
     await API.post('signup', signupCreds)
     .then((res)=>{
-      setLoginToken(res.data)
-      console.log(res.data)
+      if(typeof res.data === 'object'){
+        setLoginToken(res.data)
+        localStorage.setItem('username', res?.data?.username)
+        navigate('/otp')
+      }else{
+        setErrorMsg(res?.data)
+      }
     }).catch((err) => {
       console.log(err)
     })

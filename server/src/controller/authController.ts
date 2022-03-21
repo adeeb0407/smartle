@@ -73,7 +73,7 @@ let userData = {
             return;
          }
          console.log('call result: ' + result);
-         res.send('call result: ' + result);
+         res.send(result);
     });
  }
 
