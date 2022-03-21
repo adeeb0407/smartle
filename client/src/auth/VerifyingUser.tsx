@@ -11,11 +11,15 @@ import Alert from '@mui/material/Alert';
 const VerifyingUser = () => {
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const [codeResult, setCodeResult] = useState('');
+    const[optResult, setOtpResult] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+    
     const [codeCreds, setCodeCreds] = useState({
         email : localStorage.getItem('username'),
-        code : otp
+        code : otp.toString()
     });
+
+    
 
     const navigate = useNavigate();
 
@@ -23,14 +27,15 @@ const VerifyingUser = () => {
         if (isNaN(element.value)) return false;
 
         setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
-
         //Focus next input
         if (element.nextSibling) {
             element.nextSibling.focus();
         }
     };
     const handelCodeSubmit = async () => {
-
+        codeCreds.code = otp.join("").toString();
+        console.log(codeCreds);
+        // console.log(codeCreds);
         await API.post('code', codeCreds)
         .then((res)=>{
             if(otp.length <= 5){
@@ -39,7 +44,7 @@ const VerifyingUser = () => {
             else if(typeof res.data === 'object'){
                 setErrorMsg(res.data.code)
             }else{
-            setCodeResult(res.data)
+            setCodeResult(res.data);
             localStorage.removeItem('username')
             navigate('/')
         }
@@ -92,7 +97,9 @@ const VerifyingUser = () => {
                                     color: 'white', 
                                     marginRight: "20px"
                                     }} 
-                                onClick={e => setOtp([...otp.map(v => "")])}
+                                onClick={e => {
+                                    setOtp([...otp.map(v => "")])
+                                }}
                             >
                                 Clear
                         </Button>
