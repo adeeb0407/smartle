@@ -9,8 +9,6 @@ import "./auth.css";
 function SelectLearner() {
   return (
     <>
-      <Header />
-
       <div className="select-learner">
         <div>
           <h1 className="font-black text-4xl">Please Select Learner!!</h1>
@@ -87,7 +85,7 @@ function SelectLearner() {
           </p>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

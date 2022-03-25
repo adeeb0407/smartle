@@ -72,7 +72,7 @@ let userData = {
            res.send(err);
             return;
          }
-         console.log('call result: ' + result);
+         console.log(result);
          res.send(result);
     });
  }
@@ -97,8 +97,10 @@ export const login = (req: Request, res: Response) => {
 
 	cognitoUser.authenticateUser(authenticationDetails, {
 		onSuccess: result => {
-			var accessToken = result.getAccessToken().getJwtToken();
-			res.send(result)
+			res.send({
+			token: result.getIdToken().getJwtToken(),
+			accessToken : result.getAccessToken().getJwtToken()
+			})
 		},
 	
 		onFailure: function(err) {
@@ -107,4 +109,134 @@ export const login = (req: Request, res: Response) => {
 		},
 	});
 
+}
+
+export const getAllUsers = (req: Request, res: Response) => {
+
+	const {email} = req.body
+
+	const userDetails = {
+		Username: email,
+		Pool: userPool,
+	};
+
+
+	const cognitoUser = new CognitoUser(userDetails)
+
+	cognitoUser.getUserData(function(err, userData) {
+		if (err) {
+			res.send(err.message || JSON.stringify(err));
+			return;
+		}
+		console.log('User data for user ' + userData);
+	});
+	
+	// If you want to force to get the user data from backend,
+	// you can set the bypassCache to true
+	cognitoUser.getUserData(
+		function(err, userData) {
+			if (err) {
+				res.send(err.message || JSON.stringify(err));
+				return;
+			}
+			res.send('User data for user ' + userData);
+		},
+		{ bypassCache: true }
+	);
+}
+
+export const resendCode = (req: Request, res: Response) => {
+
+	const {email} = req.body
+
+	const userDetails = {
+		Username: email,
+		Pool: userPool,
+	};
+
+
+	const cognitoUser = new CognitoUser(userDetails)
+
+	cognitoUser.resendConfirmationCode(function(err, result) {
+		if (err) {
+			res.send(err.message || JSON.stringify(err));
+			return;
+		}
+		console.log(result);
+		res.send(result);
+	});
+}
+
+export const rememberDevice = (req : Request, res : Response) => {
+
+	const {email} = req.body
+
+	const userDetails = {
+		Username: email,
+		Pool: userPool,
+	};
+
+
+	const cognitoUser = new CognitoUser(userDetails)
+	cognitoUser.setDeviceStatusRemembered({
+		onSuccess: function(result) {
+			res.send('call result: ' + result);
+		},
+		onFailure: function(err) {
+			res.send(err.message || JSON.stringify(err));
+		},
+	});
+}
+
+export const logout = (req: Request, res: Response) => {
+
+	const {email} = req.body
+
+	const userDetails = {
+		Username: email,
+		Pool: userPool,
+	};
+
+	const cognitoUser = new CognitoUser(userDetails)
+	cognitoUser.signOut();
+}
+
+export const passwordLessLogin = (req: Request, res: Response) => {
+
+	const {email, password} = req.body
+
+	const loginDetails : any = {
+		Username : email,
+	}
+
+	const authenticationDetails : any = new AuthenticationDetails(loginDetails)
+
+	const userDetails = {
+		Username: email,
+		Pool: userPool,
+	};
+
+	const cognitoUser = new CognitoUser(userDetails)
+
+
+	cognitoUser.setAuthenticationFlowType('CUSTOM_AUTH');
+
+	cognitoUser.initiateAuth(authenticationDetails, {
+	onSuccess: result => {
+		res.send({
+		token: result.getIdToken().getJwtToken(),
+		accessToken : result.getAccessToken().getJwtToken()
+		})
+	},
+
+	onFailure: function(err) {
+		console.log(err.message || JSON.stringify(err));
+		res.send(err.message || JSON.stringify(err));
+	},
+
+	// customChallenge: function(loginDetails) {
+	// 	var challengeResponses = 'challenge-answer';
+	// 	cognitoUser.sendCustomChallengeAnswer(challengeResponses, this);
+	// },
+});
 }

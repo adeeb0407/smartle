@@ -12,21 +12,23 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import API from '../redux/api/api';
 import './auth.css';
 import Alert from '@mui/material/Alert';
+import jwt_decode from "jwt-decode";
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
   const navigate = useNavigate()
-
+  
   const redTheme = createTheme({ palette: { primary:{
     main:  purple[900]}
   } });
-
+  
   const [errorMsg, setErrorMsg] = useState("");
   const [rememberme, setRemberme] = useState(false);
+  
+  const [loginToken, setLoginToken] = useState('');
 
-  const [loginToken, setLoginToken] = useState([]);
-
+  // const decodeUserData = jwt_decode(JSON.parse(localStorage.getItem('user-details') || '{}'))
   const [loginCreds, setLoginCreds] : any = useState(
     {
       email: '',
@@ -48,15 +50,17 @@ const Login = () => {
 
     await API.post('login', loginCreds)
     .then((res)=>{
-      console.log(res);
-      if(res.data === 'Incorrect username or password.'){
-        setErrorMsg(res.data)
+      console.log(res.data)
+      if(typeof res.data === 'object'){
+        console.log(res.data.token)
+        localStorage.setItem('user-details', JSON.stringify(res.data.token))
+        setErrorMsg('')
+        navigate('/learner')
+      }else if (res.data === 'User is not confirmed.'){
+        localStorage.setItem('username', loginCreds.email)
+        navigate('/otp')
       }else{
-      setLoginToken(res.data?.accessToken)
-      localStorage.setItem('user-data', JSON.stringify(res.data?.accessToken))
-      console.log(res.data?.accessToken)
-      setErrorMsg('')
-      navigate('/')
+        setErrorMsg(res.data)
       }
     }).catch((err) => {
       console.log(err)
@@ -216,13 +220,13 @@ const Login = () => {
           </Grid>
          </Box>
           <Box style={{width: "80%", margin: "auto", textAlign:"center"}}>
-            <Link to={"/"} >
+            {/* <Link to={"/"} > */}
               <ThemeProvider theme={redTheme}>
                 <Button type = 'submit' className = 'auth-button' variant="contained" style={{width:"100%", marginTop: "20px", backgroundColor : '#917EBD'}}>
                     Login
                 </Button>
               </ThemeProvider>
-            </Link>
+            {/* </Link> */}
           </Box>
           <Box style={{width: "80%", margin: "auto", textAlign:"center", marginTop: "20px", paddingBottom: "20px"}}>
           <p className = 'text-stone-600'>Don't have an account Signup now !!</p>

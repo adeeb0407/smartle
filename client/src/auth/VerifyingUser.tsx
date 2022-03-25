@@ -8,20 +8,21 @@ import API from '../redux/api/api';
 import { useNavigate } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 
-const VerifyingUser = () => {
+const VerifyingUser: React.FC = () => {
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const [codeResult, setCodeResult] = useState('');
     const[optResult, setOtpResult] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
-    
+    const navigate = useNavigate();
+
+    const [user, setUser] = useState<any>(JSON.parse(localStorage.getItem('user-details') || '{}'))
+
     const [codeCreds, setCodeCreds] = useState({
-        email : localStorage.getItem('username'),
+        email : localStorage.getItem('username'|| '{}'),
         code : otp.toString()
     });
 
-    
 
-    const navigate = useNavigate();
 
     const handleChange = (element:any, index: any) => {
         if (isNaN(element.value)) return false;
@@ -44,15 +45,22 @@ const VerifyingUser = () => {
             else if(typeof res.data === 'object'){
                 setErrorMsg(res.data.code)
             }else{
+                if(user !== null || undefined){
+                    navigate('/learner')
+                }else{
+                    navigate('/login')
+                }
             setCodeResult(res.data);
             localStorage.removeItem('username')
-            navigate('/')
         }
         }).catch((err) => {
           console.log(err)
         })
     }
-
+    console.log(localStorage.getItem('username'))
+    if(localStorage.getItem('username') === null){
+        return (<h1>No user Logged in</h1>)
+    }else{
     return (
         <>
             <AuthHeader />
@@ -83,7 +91,7 @@ const VerifyingUser = () => {
                         );
                     })}
 
-                    <Typography>OTP Entered - {otp.join("")}</Typography>
+                    {/* <Typography>OTP Entered - {otp.join("")}</Typography> */}
                     <Typography>
                         
                             <Button
@@ -121,6 +129,7 @@ const VerifyingUser = () => {
             </Box>
         </>
     );
+    };
 };
 
 export default VerifyingUser;
