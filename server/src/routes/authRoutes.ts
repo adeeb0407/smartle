@@ -7,6 +7,9 @@ import {
   resendCode,
   rememberDevice,
   passwordLessLogin,
+  loginParentDataInput,
+  childrenSelect,
+  createChild,
 } from "../controller/authController";
 
 const router = express.Router();
@@ -18,5 +21,10 @@ router.post("/getUser", getAllUsers);
 router.post("/resendcode", resendCode);
 router.post("/rememberme", rememberDevice);
 router.post("/loginwithoutpass", passwordLessLogin);
+
+//parent and child routes
+router.post("/parentpopluate", loginParentDataInput);
+router.post("/selectlearner", childrenSelect);
+router.post("/createchild", createChild);
 
 export default router;

@@ -99,8 +99,18 @@ export const login = (req: Request, res: Response) => {
 		onSuccess: result => {
 			res.send({
 			token: result.getIdToken().getJwtToken(),
-			accessToken : result.getAccessToken().getJwtToken()
+			accessToken : result.getAccessToken().getJwtToken(),
+			username : result.getAccessToken().payload.username,
+			name : result.getIdToken().payload.name,
+			email : result.getIdToken().payload.email
 			})
+			//  db.query('INSERT INTO parent (parent_id, parent_name, parent_email) VALUES(?,?,?)', [result.getAccessToken().payload.username, result.getIdToken().payload.name, result.getIdToken().payload.email],
+			//  (err, result) => {
+			//     if(err){
+			// 	console.log(err);
+			//  	}
+			//  }) 
+
 		},
 	
 		onFailure: function(err) {
@@ -110,6 +120,19 @@ export const login = (req: Request, res: Response) => {
 	});
 
 }
+
+ export const loginParentDataInput = (req: Request, res: Response) => {
+
+	const {parentId, parentName, parentEmail} = req.body
+
+ 	db.query('INSERT INTO parent (parent_id, parent_name, parent_email) VALUES(?,?,?)', [parentId, parentName, parentEmail],
+ 	(err, result) => {
+ 	   if(err){
+ 		   console.log(err);
+ 		}
+		 res.send(result)
+ 	}) 
+ }
 
 export const getAllUsers = (req: Request, res: Response) => {
 
@@ -234,9 +257,50 @@ export const passwordLessLogin = (req: Request, res: Response) => {
 		res.send(err.message || JSON.stringify(err));
 	},
 
-	// customChallenge: function(loginDetails) {
-	// 	var challengeResponses = 'challenge-answer';
-	// 	cognitoUser.sendCustomChallengeAnswer(challengeResponses, this);
-	// },
+	customChallenge: function(loginDetails) {
+		var challengeResponses = 'challenge-answer';
+		cognitoUser.sendCustomChallengeAnswer(challengeResponses, this);
+	},
 });
+}
+
+export const childrenSelect = (req: Request, res: Response) => {
+
+		const {userId} = req.body
+		
+	try {
+		
+		db.query(`SELECT * FROM student WHERE parent_id = ?`, [userId],
+		(err, result) => {
+		   if(err){
+			   console.log(err);
+			   res.json({message : "error"})
+		   }else{
+			   res.json({message : "success",result})
+		   }
+	   })
+  
+	  } catch (error) {
+		  res.status(404).json( {message : 'Error'} )
+	  }
+}
+export const createChild = (req: Request, res: Response) => {
+
+		const {studentName, studentGender, studentAge, parentId} = req.body
+		
+	try {
+		
+		db.query('INSERT INTO student (student_name, student_gender, student_age, parent_id) VALUES(?,?,?,?)', [studentName, studentGender,studentAge, parentId, studentGender],
+		(err, result) => {
+		   if(err){
+			   console.log(err);
+			   res.json({message : "error"})
+		   }else{
+			   res.json({message : "success",result})
+		   }
+	   })
+  
+	  } catch (error) {
+		  res.status(404).json( {message : 'Error'} )
+	  }
 }
